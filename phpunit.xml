@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php" testdox="true">
+    <testsuites>
+        <testsuite name="Unit Test Suite">
+            <directory suffix=".php">./tests/unit</directory>
+        </testsuite>
+        <testsuite name="REST API Test Suite">
+            <directory suffix=".php">./tests/rest</directory>
+        </testsuite>        
+    </testsuites>
+</phpunit>
