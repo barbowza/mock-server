@@ -5,7 +5,8 @@ Proudly in PHP
 
 ## Features
 
-- No dependencies
+- PHP 7.4 and above
+- No dependencies/frameworks
 
 # Testing
 
