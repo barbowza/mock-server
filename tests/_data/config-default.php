@@ -1,22 +1,22 @@
 <?php
 return [
     "routes" => [[
-        'path' => '!^/hello$!i',
+        'uri' => '!^/hello$!i',
         'verb' => 'GET',
         'response' => [
-            'staticData' => "world from staticData",
+            'static-data' => "string from staticData",
         ],
     ], [
-        'path' => '!^/param/([^/]+)/?$!i',
+        'uri' => '!^/param/([^/]+)/?$!i',
         'verb' => 'GET',
         'response' => [
-            'staticData' => "param \$1 (param expansion todo)",
+            'static-data' => "param \$1 (param expansion todo)",
         ],
     ], [
-        'path' => '!^/response/php?$!i',
+        'uri' => '!^/response/php?$!i',
         'verb' => 'GET',
         'response' => [
-            'scriptFile' => "script.php",
+            'script-file' => "response-script.php",
         ],
     ]],
 ];

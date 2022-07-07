@@ -3,10 +3,10 @@
 return [
     "routes" => [
         [
-            'path'     => '!^/!i',
+            'uri'     => '!^/!i',
             'verb'     => '*',
             'response' => [
-                'staticData' => "default response",
+                'static-data' => "default response",
             ],
         ]
     ]

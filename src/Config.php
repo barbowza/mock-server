@@ -27,20 +27,29 @@ class Config
         $config = self::LoadConfigFromPhp($this->configPath);
 
         if (is_null($config) || is_null($configRoutes = ($config['routes'] ?? null))) {
+
             $config = self::LoadConfigFromPhp(self::PATH_DEFAULT_CONFIG);
 
             if (is_null($config) || is_null($configRoutes = ($config['routes'] ?? null))) {
                 throw new RuntimeException("DEFAULT CONFIG file not found at " . self::PATH_DEFAULT_CONFIG);
             }
-
         }
 
+        $defaults = array_fill_keys(
+            ['uri', 'verb', 'response', 'static-data', 'script-file'],
+            null
+        );
+
         foreach ($configRoutes as $route) {
-            $routes[] = [
-                "path"     => $route['path'] ?? null,
-                "verb"     => $routes['verb'] ?? null,
-                "response" => $route['response'] ?? null,
-            ];
+            ['uri'      => $uri,
+             'verb'     => $verb,
+             'response' => $response] = $route + $defaults;
+
+            /** @noinspection DisconnectedForeachInstructionInspection */
+            ['static-data' => $staticData,
+             'script-file' => $scriptFile] = ($response ?? []) + $defaults;
+
+            $routes[] = new Route($uri, $verb, $staticData, $scriptFile);
         }
         return $routes ?? null;
     }

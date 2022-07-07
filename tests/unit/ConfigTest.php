@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use MockServer\Config;
+use MockServer\Route;
 use PHPUnit\Framework\TestCase;
 
 class ConfigTest extends TestCase
@@ -23,9 +24,9 @@ class ConfigTest extends TestCase
         $routes = $config->getRoutes();
 
         $this->assertIsArray($routes);
+        $this->assertCount(3, $routes);
 
-        $this->assertIsArray($routes[0]);
-        $this->assertArrayHasKey('path', $routes[0]);
+        $this->assertInstanceOf(Route::class, $routes[0]);
     }
 
     public function test_config_without_routes_uses_defaults(): void
@@ -42,6 +43,5 @@ class ConfigTest extends TestCase
         $routes = $config->getRoutes();
 
         $this->assertIsArray($routes);
-
     }
 }
