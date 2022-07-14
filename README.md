@@ -7,6 +7,9 @@ Proudly in PHP
 
 - PHP 7.4 and above
 - No dependencies/frameworks
+- Responsive out-of-the-box
+- Configuration defined Routes
+- Static and Dynamic Responses
 
 # Unit Testing
 

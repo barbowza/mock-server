@@ -11,6 +11,9 @@ class Config
 {
     private const PATH_DEFAULT_CONFIG = __DIR__ . '/../config/default.php';
 
+    private const TOKEN_STATIC_DATA = 'static-data';
+    private const TOKEN_SCRIPT_FILE = 'script-file';
+
     private ?string $configPath;
 
     public function __construct(?string $configPath = null)
@@ -34,7 +37,7 @@ class Config
         }
 
         $defaults = array_fill_keys(
-            ['uri', 'verb', 'response', 'static-data', 'script-file'],
+            ['uri', 'verb', 'response', Config::TOKEN_STATIC_DATA, self::TOKEN_SCRIPT_FILE],
             null
         );
 
@@ -44,8 +47,8 @@ class Config
              'response' => $response] = $route + $defaults;
 
             /** @noinspection DisconnectedForeachInstructionInspection */
-            ['static-data' => $staticData,
-             'script-file' => $scriptFile] = ($response ?? []) + $defaults;
+            [Config::TOKEN_STATIC_DATA => $staticData,
+             self::TOKEN_SCRIPT_FILE   => $scriptFile] = ($response ?? []) + $defaults;
 
             $routes[] = new Route($uri, $verb, $staticData, $scriptFile);
         }
