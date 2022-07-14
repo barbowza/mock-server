@@ -13,3 +13,9 @@ Proudly in PHP
 ```shell
 ./vendor/bin/phpunit --testdox tests/unit
 ```
+
+# Running
+
+```shell
+php -S 127.0.0.1:8765 -t /path/to/src/
+```
