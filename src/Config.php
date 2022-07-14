@@ -27,9 +27,7 @@ class Config
         $config = self::LoadConfigFromPhp($this->configPath);
 
         if (is_null($config) || is_null($configRoutes = ($config['routes'] ?? null))) {
-
             $config = self::LoadConfigFromPhp(self::PATH_DEFAULT_CONFIG);
-
             if (is_null($config) || is_null($configRoutes = ($config['routes'] ?? null))) {
                 throw new RuntimeException("DEFAULT CONFIG file not found at " . self::PATH_DEFAULT_CONFIG);
             }
