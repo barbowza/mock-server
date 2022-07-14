@@ -1,6 +1,6 @@
 <?php
-
 // Request.php - Represents the http request received by the Server
+
 declare (strict_types=1);
 
 namespace MockServer;

@@ -1,6 +1,7 @@
 <?php
-// Router - Based on the genius 14 line router by moagrius
-// https://github.com/moagrius/RegexRouter
+// Router - Based on the genius [14 line router by moagrius](https://github.com/moagrius/RegexRouter)
+
+declare (strict_types=1);
 
 namespace MockServer;
 
