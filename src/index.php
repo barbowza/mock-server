@@ -1,10 +1,10 @@
-<?php /** @noinspection ALL */
+<?php
 // index.php - The Driver
 declare(strict_types=1);
 
 namespace MockServer;
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
 $config = new Config();
 
@@ -14,6 +14,6 @@ foreach ($config->getRoutes() as $route) {
 }
 
 $server  = new Server($router);
-$request = $server->getRequest();
+$request = Server::getRequest();
 
 echo $server->handleRequest($request);

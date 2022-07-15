@@ -3,4 +3,3 @@ vendor/
 .phpunit*
 .vscode
 todo.md
-src/index.php
