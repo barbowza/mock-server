@@ -10,7 +10,7 @@ class DefaultServerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->http = new GuzzleHttp\Client(['base_uri' => 'http://localhost:8765/']);
+        $this->http = new GuzzleHttp\Client(['base_uri' => 'http://localhost:8765']);
     }
 
     public function tearDown(): void
@@ -18,12 +18,21 @@ class DefaultServerTest extends TestCase
         $this->http = null;
     }
 
-    public function test_default_root(): void
+    public function test_default_root_static_response(): void
     {
-        $response = $this->http->request('GET', '/');
+        $response = $this->http->request('GET', '/mock-server/');
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertMatchesRegularExpression('/default response/', $response->getBody()->getContents());
+        $this->assertStringContainsString('default response', $response->getBody()->getContents());
+    }
+
+    public function test_default_status_dynamic_response(): void
+    {
+        $response = $this->http->request('GET', '/mock-server/status');
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertStringContainsString('dynamic response', $response->getBody()->getContents());
     }
 }

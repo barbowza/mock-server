@@ -27,7 +27,7 @@ class RouteTest extends TestCase
             '!^/some-uri$!',
             'VERB',
             null,
-            dirname(__DIR__) . '/_data/response-script.php'
+            dirname(__DIR__) . '/_data/config-default/response-script.php'
         );
 
         $this->assertStringContainsString('response-script', $route->getResponseBody('/some-uri'));

@@ -13,7 +13,7 @@ return [
             'static-data' => "param \$1 (param expansion todo)",
         ],
     ], [
-        'uri' => '!^/response/php?$!i',
+        'uri' => '!^/dynamic/php?$!i',
         'verb' => 'GET',
         'response' => [
             'script-file' => "response-script.php",

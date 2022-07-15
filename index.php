@@ -6,7 +6,8 @@ namespace MockServer;
 
 require 'vendor/autoload.php';
 
-$config = new Config(__DIR__ . '/config/default.php');
+$config = new Config();
+
 $router = new Router();
 foreach ($config->getRoutes() as $route) {
     $router->addRoute($route);
