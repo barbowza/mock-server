@@ -20,11 +20,11 @@ class DefaultServerTest extends TestCase
 
     public function test_default_root_static_response(): void
     {
-        $response = $this->http->request('GET', '/mock-server/');
+        $response = $this->http->request('GET', '/mock-server');
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertStringContainsString('default response', $response->getBody()->getContents());
+        $this->assertStringContainsString('Operational', $response->getBody()->getContents());
     }
 
     public function test_default_status_dynamic_response(): void
@@ -33,6 +33,6 @@ class DefaultServerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertStringContainsString('mock-server operational', $response->getBody()->getContents());
+        $this->assertStringContainsString('Operational', $response->getBody()->getContents());
     }
 }
