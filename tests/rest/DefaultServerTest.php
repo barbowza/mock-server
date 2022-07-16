@@ -33,6 +33,6 @@ class DefaultServerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertStringContainsString('dynamic response', $response->getBody()->getContents());
+        $this->assertStringContainsString('mock-server operational', $response->getBody()->getContents());
     }
 }

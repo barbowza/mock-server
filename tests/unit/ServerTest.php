@@ -19,14 +19,14 @@ class ServerTest extends TestCase
         $this->assertInstanceOf(Server::class, $server);
     }
 
-    public function test_server_handleRequest(): void
+    public function test_server_handleRequest_returns_404_on_path_not_matched(): void
     {
         /** @var Router $mockRouter */
         $mockRouter = $this->createStub(Router::class);
 
         $server = new Server($mockRouter);
 
-        $request = new Request('/some/path');
-        $this->assertNull($server->handleRequest($request));
+        $request = new Request('/some/path/not/matched');
+        $this->assertStringContainsString('404', $server->handleRequest($request));
     }
 }

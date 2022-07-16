@@ -19,8 +19,10 @@ Proudly in PHP
 
 # Running Server via local php
 
+php must be able to see `index.php`
+
 ```shell
-php -S 127.0.0.1:8765 -t /path/to/src/
+php -S 127.0.0.1:8765 -t /install/dir/
 ```
 
 # Integration Testing
