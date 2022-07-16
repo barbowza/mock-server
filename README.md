@@ -17,7 +17,7 @@ Proudly in PHP
 ./vendor/bin/phpunit --testdox tests/unit
 ```
 
-# Running Server
+# Running Server via local php
 
 ```shell
 php -S 127.0.0.1:8765 -t /path/to/src/
@@ -25,8 +25,19 @@ php -S 127.0.0.1:8765 -t /path/to/src/
 
 # Integration Testing
 
-Run server as shown above. Then:
+Run local php server as shown above then:
 
 ```shell
 $ vendor/bin/phpunit --testdox tests/rest/
 ```
+
+# Running Server via Docker
+
+default port 8765
+
+```shell
+$ docker compose up --build
+$ curl -s http://localhost:8765/
+404 mock-server did not match uri: /
+```
+

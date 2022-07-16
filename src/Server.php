@@ -16,7 +16,10 @@ class Server
 
     public function handleRequest(Request $request): ?string
     {
-        return $this->router->execute($request);
+        if (is_null($response = $this->router->execute($request))) {
+            $response = '404 mock-server did not match uri: ' . $_SERVER['REQUEST_URI'];
+        }
+        return $response;
     }
 
     public static function getRequest(): Request

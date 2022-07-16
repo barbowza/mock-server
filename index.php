@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MockServer;
 
-require '../vendor/autoload.php';
+require 'vendor/autoload.php';
 
 $config = new Config();
 
