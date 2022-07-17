@@ -1,5 +1,7 @@
 <?php
+
 return [
+    'mock-server-config' => '1.0.0',
     "routes" => [[
         'uri' => '!^/hello$!i',
         'verb' => 'GET',

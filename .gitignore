@@ -1,5 +1,5 @@
-zdev
 vendor/
 .phpunit*
 .vscode
 todo.md
+config/hello.config.php

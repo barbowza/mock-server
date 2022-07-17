@@ -34,13 +34,15 @@ class ConfigTest extends TestCase
         $this->assertStringContainsString('dynamic', $routes[2]->getUriRegex());
     }
 
-    public function test_config_getRoutes_without_routes_throws(): void
+    public function test_config_getRoutes_without_routes_returns_emergency_route(): void
     {
         $config = new Config(self::PATH_CONFIG_NO_ROUTES);
 
-        $this->expectException(RuntimeException::class);
+        $routes = $config->getRoutes();
 
-        $config->getRoutes();
+        $this->assertIsArray($routes);
+
+        $this->assertStringContainsString('*', $routes[0]->getUriRegex());
     }
 
     public function test_no_config_file_uses_defaults(): void

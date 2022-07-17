@@ -11,6 +11,10 @@ Proudly in PHP
 - Configuration defined Routes
 - Static and Dynamic Responses
 
+# Config
+
+See config/mock-server.config.php for default config.
+
 # Unit Testing
 
 ```shell
@@ -39,7 +43,7 @@ default port 8765
 
 ```shell
 $ docker compose up --build
-$ curl -s http://localhost:8765/
-404 mock-server did not match uri: /
+$ curl -s http://localhost:8765/mock-server/status
+2022-07-17 13:45:04 / Operational (script:mock-server-status.php)
 ```
 

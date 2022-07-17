@@ -52,8 +52,7 @@ class Route
             $context = [
                 'uri' => $uri
             ];
-            include $path;
-            return getResponse($context);
+            return include $path;
         }
         return null;
     }

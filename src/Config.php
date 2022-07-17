@@ -10,7 +10,9 @@ use RuntimeException;
 class Config
 {
     private const DEFAULT_CONFIG_DIR = __DIR__ . '/../config';
-    private const DEFAULT_FILENAME = 'default.php';
+
+    /** Flag used in file as being a config */
+    private const MOCK_SERVER_CONFIG = 'mock-server-config';
 
     private const TOKEN_ROUTES = 'routes';
     private const TOKEN_URI_REGEX = 'uri';
@@ -20,6 +22,7 @@ class Config
     private const TOKEN_SCRIPT_FILE = 'script-file';
 
     private string $configPath;
+    private ?array $config = null;
 
     public function __construct(string $configPath = self::DEFAULT_CONFIG_DIR)
     {
@@ -32,25 +35,25 @@ class Config
 
     public function getRoutes(): ?array
     {
-        $config = self::LoadConfigsFromDir($this->configPath);
-
-        if (empty($config) || is_null($configRoutes = ($config[self::TOKEN_ROUTES] ?? null))) {
-            throw new RuntimeException("DEFAULT CONFIG file not found at " . $this->configPath . '/' . self::DEFAULT_FILENAME);
-        }
+        $config = $this->getConfig();
 
         $defaults = array_fill_keys(
             [self::TOKEN_URI_REGEX, self::TOKEN_VERB, self::TOKEN_RESPONSE, self::TOKEN_STATIC_DATA, self::TOKEN_SCRIPT_FILE],
             null
         );
 
-        foreach ($configRoutes as $route) {
-            [self::TOKEN_URI_REGEX      => $uri,
-             self::TOKEN_VERB     => $verb,
-             self::TOKEN_RESPONSE => $response] = $route + $defaults;
+        foreach ($config['routes'] as $route) {
+            [
+                self::TOKEN_URI_REGEX => $uri,
+                self::TOKEN_VERB => $verb,
+                self::TOKEN_RESPONSE => $response
+            ] = $route + $defaults;
 
             /** @noinspection DisconnectedForeachInstructionInspection */
-            [self::TOKEN_STATIC_DATA => $staticData,
-             self::TOKEN_SCRIPT_FILE => $scriptFile] = ($response ?? []) + $defaults;
+            [
+                self::TOKEN_STATIC_DATA => $staticData,
+                self::TOKEN_SCRIPT_FILE => $scriptFile
+            ] = ($response ?? []) + $defaults;
 
             if ($scriptFile) {
                 $scriptFile = realpath($this->configPath . "/$scriptFile") ?: null;
@@ -61,26 +64,58 @@ class Config
         return $routes ?? null;
     }
 
-    private static function LoadConfigFromPhp(?string $filePath): ?array
+    private function getConfig(): array
     {
-        if (is_null($filePath) || false === ($path = realpath($filePath))) {
-            return null;
+        if (!is_null($this->config)) {
+            return $this->config;
         }
 
-        return require($path);
+        return $this->config = self::LoadFromConfigDir($this->configPath);
     }
 
-    private static function LoadConfigsFromDir(?string $configPath): array
+    private static function LoadFromConfigDir(?string $configPath): array
     {
-        $files = [self::DEFAULT_FILENAME]; #TODO glob php files from dir
-
-        $configs = [];
+        $files = glob($configPath . '/' . '*.config.php');
+        $routes = [];
         foreach ($files as $filename) {
-            $configs[$filename] = self::LoadConfigFromPhp($configPath . "/$filename");
+            $config = include $filename;
+            if (is_array($config) && self::isConfig($config)) {
+                if (isset($config[self::TOKEN_ROUTES]) && is_array($config[self::TOKEN_ROUTES])) {
+                    $routes = [...$routes, ...$config[self::TOKEN_ROUTES]];
+                }
+            }
         }
 
-        #TODO merge arrays to single config, with default lowest priority
+        if (empty($routes)) {
+            $msg = "NO ROUTES FOUND in config at " . $configPath;
+            error_log($msg);
+            $routes = self::fallbackRoutesConfig($msg);
+        }
 
-        return $configs[self::DEFAULT_FILENAME];
+        return [
+            self::TOKEN_ROUTES => $routes
+        ];
+    }
+
+    private static function isConfig(array $config): bool
+    {
+        if (isset($config[self::MOCK_SERVER_CONFIG]))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static function fallbackRoutesConfig($msg): array
+    {
+        return [
+            [
+                self::TOKEN_URI_REGEX  => '!.*!i',
+                self::TOKEN_VERB     => 'GET',
+                self::TOKEN_RESPONSE => [
+                    self::TOKEN_STATIC_DATA => $msg,
+                ]
+            ]
+        ];
     }
 }
