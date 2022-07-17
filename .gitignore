@@ -1,6 +1,2 @@
 vendor/
 .phpunit*
-.vscode
-todo.md
-config/hello.config.php
-curl.sh
