@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use MockServer\Request;
 use MockServer\Route;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +19,7 @@ class RouteTest extends TestCase
         $this->assertIsString($route->getUriRegex());
         $this->assertEquals('VERB', $route->getVerb());
 
-        $this->assertEquals('hello world', $route->getResponseBody('/some-uri'));
+        $this->assertEquals('hello world', $route->getResponse(new Request('/some-uri')));
     }
 
     public function test_route_script_response_correct(): void
@@ -30,6 +31,6 @@ class RouteTest extends TestCase
             dirname(__DIR__) . '/_data/config-default/response-script.php'
         );
 
-        $this->assertStringContainsString('response-script', $route->getResponseBody('/some-uri'));
+        $this->assertStringContainsString('response-script', $route->getResponse(new Request('some-uri')));
     }
 }

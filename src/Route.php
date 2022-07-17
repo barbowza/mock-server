@@ -26,10 +26,16 @@ class Route
         $this->scriptPath     = $scriptPath;
     }
 
-    public function getResponseBody(string $uri): string
+    /**
+     * getResponse is passed the Request so it can build a context to pass to script
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function getResponse(Request $request): string
     {
         if (!is_null($this->scriptPath)) {
-            return $this->executeScript($uri) ?? 'no response';
+            return $this->executeScript($this->createContext($request)) ?? 'no response';
         }
 
         return $this->staticResponse ?? 'no response';
@@ -45,15 +51,19 @@ class Route
         return $this->verb;
     }
 
-    private function executeScript(string $uri): ?string
+    private function executeScript(array $context): ?string
     {
         $path = realpath($this->scriptPath);
         if ($path) {
-            $context = [
-                'uri' => $uri
-            ];
             return include $path;
         }
         return null;
+    }
+
+    private function createContext(Request $request): array
+    {
+        return [
+            'uri' => $request->getUri()
+        ];
     }
 }

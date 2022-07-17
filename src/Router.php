@@ -25,7 +25,7 @@ class Router
         foreach ($this->routes as $pattern => $route) {
             if (preg_match($pattern, $uri, $params) === 1) {
                 array_shift($params);
-                return $route->getResponseBody($uri);
+                return $route->getResponse($request);
             }
         }
         return null;
