@@ -7,15 +7,22 @@ namespace MockServer;
 
 class Request
 {
-    protected string $uri;
-    public array  $headers;
-    public string $body;
+    private string $uri;
+    private array $query;
+    private array  $headers;
+    private string $body;
 
-    public function __construct(string $uri, array $headers = [], string $body = '')
-    {
+
+    public function __construct(
+        string $uri,
+        array $headers = [],
+        string $body = '',
+        array $query = []
+    ) {
         $this->uri     = $uri;
         $this->headers = $headers;
         $this->body    = $body;
+        $this->query  = $query;
     }
 
     /**
@@ -24,5 +31,20 @@ class Request
     public function getUri(): string
     {
         return $this->uri;
+    }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    public function getBody(): string
+    {
+        return $this->body;
+    }
+
+    public function getQuery(): array
+    {
+        return $this->query;
     }
 }

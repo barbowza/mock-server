@@ -28,9 +28,13 @@ class Server
      */
     public static function getRequest(): Request
     {
-        $uri = $_SERVER['REQUEST_URI'];
+        $parsed = parse_url($_SERVER['REQUEST_URI']);
+        $uri = $parsed['path'] ?? 'no-path';
+        parse_str($parsed['query'] ?? '', $query);
         $headers = self::getHeaders();
-        return new Request($uri, $headers);
+        $body = self::getBody();
+
+        return new Request($uri, $headers, $body, $query);
     }
 
     private static function getHeaders(): array
@@ -43,5 +47,10 @@ class Server
             }
         }
         return $headers;
+    }
+
+    private static function getBody(): ?string
+    {
+        return file_get_contents("php://input");
     }
 }

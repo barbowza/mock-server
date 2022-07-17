@@ -29,4 +29,16 @@ class ServerTest extends TestCase
         $request = new Request('/some/path/not/matched');
         $this->assertStringContainsString('404', $server->handleRequest($request));
     }
+
+    public function test_server_getResponse(): void
+    {
+        $_SERVER['REQUEST_URI'] = '/some/path?a=1';
+
+        $request = Server::getRequest();
+
+        $this->assertInstanceOf(Request::class, $request);
+
+        $this->assertEquals('/some/path', $request->getUri());
+        $this->assertEquals(['a' => 1], $request->getQuery());
+    }
 }

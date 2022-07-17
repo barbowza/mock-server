@@ -63,7 +63,10 @@ class Route
     private function createContext(Request $request): array
     {
         return [
-            'uri' => $request->getUri()
+            'uri' => $request->getUri(),
+            'headers' => $request->getHeaders(),
+            'body' => $request->getBody(),
+            'query' => $request->getQuery(),
         ];
     }
 }

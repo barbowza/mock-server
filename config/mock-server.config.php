@@ -18,10 +18,10 @@ return [
             ],
         ],
         [
-            'uri'     => '!^/$!i',
-            'verb'     => 'GET',
+            'uri'     => '!^/mock-server/reflect$!i',
+            'verb'     => '*',
             'response' => [
-                'script-file' => 'mock-server-status.php',
+                'script-file' => 'mock-server-reflect.php',
             ],
         ],
     ]

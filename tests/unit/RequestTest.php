@@ -11,6 +11,14 @@ class RequestTest extends TestCase
     {
         $request = new Request(
             '/some-path',
+        );
+        $this->assertInstanceOf(Request::class, $request);
+    }
+
+    public function test_request_uri(): void
+    {
+        $request = new Request(
+            '/some-path',
             ["Accept" => "*/*"],
             'some-body'
         );
@@ -18,4 +26,5 @@ class RequestTest extends TestCase
 
         $this->assertEquals('/some-path', $request->getUri());
     }
+
 }
