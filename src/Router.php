@@ -34,7 +34,7 @@ class Router
         foreach ($this->routes as $pattern => $route) {
             if (preg_match($pattern, $uri, $matches) === 1) {
                 $this->logInfo('Router matched:' . $matches[0]);
-                return $route->getResponse($request);
+                return $route->getResponse(Server::createContext($request));
             }
         }
         return null;

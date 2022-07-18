@@ -1,9 +1,11 @@
 <?php
 
+/** @var MockServer\RequestContext $context */
+
 try {
     $response = json_encode([
         'timestamp' => date('Y-m-d H:i:s'),
-        'context'   => $context ?? [],
+        'context'   => $context ? $context->toArray() : [],
         '$_SERVER'  => $_SERVER,
         '$_GET'     => $_GET,
         '$_POST'    => $_POST,

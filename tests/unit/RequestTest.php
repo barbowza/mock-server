@@ -18,13 +18,22 @@ class RequestTest extends TestCase
     public function test_request_uri(): void
     {
         $request = new Request(
-            '/some-path',
-            ["Accept" => "*/*"],
-            'some-body'
+            '/some-path'
         );
-        $this->assertInstanceOf(Request::class, $request);
 
         $this->assertEquals('/some-path', $request->getUri());
+    }
+
+    public function test_request_query(): void
+    {
+        $request = new Request(
+            '/some-path',
+            ["Accept" => "*/*"],
+            'some-body',
+            ['param1' => 'some-value']
+        );
+
+        $this->assertEquals(['param1' => 'some-value'], $request->getQuery());
     }
 
 }

@@ -1,3 +1,5 @@
 <?php
 
-return date('Y-m-d H:i:s') . ' ' . $context['uri'] . ' Operational' . ' (script:' . basename(__FILE__) . ')';
+/** @var MockServer\RequestContext $context */
+
+return date('Y-m-d H:i:s') . ' ' . $context->getUri() . ' Operational' . ' (script:' . basename(__FILE__) . ')';

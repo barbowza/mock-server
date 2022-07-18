@@ -43,6 +43,11 @@ class Server
         return new Request($uri, $headers, $body, $query);
     }
 
+    public static function createContext(Request $request): RequestContext
+    {
+        return new RequestContext($request);
+    }
+
     private static function getHeaders(): array
     {
         // https://stackoverflow.com/a/11709337

@@ -13,6 +13,12 @@ class Request
     private string $body;
 
 
+    /**
+     * @param string $uri
+     * @param array $headers
+     * @param string $body
+     * @param array $query
+     */
     public function __construct(
         string $uri,
         array $headers = [],

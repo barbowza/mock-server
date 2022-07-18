@@ -26,16 +26,10 @@ class Route
         $this->scriptPath     = $scriptPath;
     }
 
-    /**
-     * getResponse is passed the Request so it can build a context to pass to script
-     *
-     * @param Request $request
-     * @return string
-     */
-    public function getResponse(Request $request): string
+    public function getResponse(RequestContext $context): string
     {
         if (!is_null($this->scriptPath)) {
-            return $this->executeScript($this->createContext($request)) ?? 'no response';
+            return $this->executeScript($context) ?? 'no response';
         }
 
         return $this->staticResponse ?? 'no response';
@@ -52,26 +46,16 @@ class Route
     }
 
     /**
-     * @param array $context Block of information silently passed to included Script
+     * @param RequestContext $context Block of information silently passed to included Script
      * @return string|null
      * @noinspection PhpUnusedParameterInspection
      */
-    private function executeScript(array $context): ?string
+    private function executeScript(RequestContext $context): ?string
     {
         $path = realpath($this->scriptPath);
         if ($path) {
             return include $path;
         }
         return null;
-    }
-
-    private function createContext(Request $request): array
-    {
-        return [
-            'uri'     => $request->getUri(),
-            'headers' => $request->getHeaders(),
-            'body'    => $request->getBody(),
-            'query'   => $request->getQuery(),
-        ];
     }
 }
