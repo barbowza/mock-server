@@ -35,4 +35,42 @@ class DefaultServerTest extends TestCase
 
         $this->assertStringContainsString('Operational', $response->getBody()->getContents());
     }
+
+    public function test_reflect_get(): void
+    {
+        $response = $this->http->request('GET', '/mock-server/reflect?a=b');
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = json_decode($response->getBody()->getContents(), true);
+
+        $this->assertArrayHasKey('timestamp', $response);
+
+        $this->assertArrayHasKey('context', $response);
+        $this->assertArrayHasKey('query', $response['context']);
+        $this->assertEquals(['a' => 'b'], $response['context']['query']);
+
+        $this->assertArrayHasKey('$_GET', $response);
+    }
+
+    public function test_reflect_post(): void
+    {
+        $response = $this->http->request(
+            'POST',
+            '/mock-server/reflect',
+            [
+                'json' => '{"key": "val", "num": 2}'
+            ]
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = json_decode($a = $response->getBody()->getContents(), true);
+
+        $this->assertArrayHasKey('timestamp', $response);
+
+        $this->assertArrayHasKey('context', $response);
+        $this->assertArrayHasKey('body', $response['context']);
+        $this->assertEquals('"{\"key\": \"val\", \"num\": 2}"', $response['context']['body']);
+    }
 }
