@@ -45,8 +45,8 @@ class Config
         foreach ($config['routes'] as $route) {
             [
                 self::TOKEN_URI_REGEX => $uri,
-                self::TOKEN_VERB => $verb,
-                self::TOKEN_RESPONSE => $response
+                self::TOKEN_VERB      => $verb,
+                self::TOKEN_RESPONSE  => $response
             ] = $route + $defaults;
 
             /** @noinspection DisconnectedForeachInstructionInspection */
@@ -76,6 +76,7 @@ class Config
     private static function LoadFromConfigDir(?string $configPath): array
     {
         $files = glob($configPath . '/' . '*.config.php');
+
         $routes = [];
         foreach ($files as $filename) {
             $config = include $filename;
@@ -99,8 +100,7 @@ class Config
 
     private static function isConfig(array $config): bool
     {
-        if (isset($config[self::MOCK_SERVER_CONFIG]))
-        {
+        if (isset($config[self::MOCK_SERVER_CONFIG])) {
             return true;
         }
         return false;
@@ -110,9 +110,9 @@ class Config
     {
         return [
             [
-                self::TOKEN_URI_REGEX  => '!.*!i',
-                self::TOKEN_VERB     => 'GET',
-                self::TOKEN_RESPONSE => [
+                self::TOKEN_URI_REGEX => '!.*!i',
+                self::TOKEN_VERB      => 'GET',
+                self::TOKEN_RESPONSE  => [
                     self::TOKEN_STATIC_DATA => $msg,
                 ]
             ]

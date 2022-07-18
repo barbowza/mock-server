@@ -29,10 +29,10 @@ class Server
     public static function getRequest(): Request
     {
         $parsed = parse_url($_SERVER['REQUEST_URI']);
-        $uri = $parsed['path'] ?? 'no-path';
+        $uri    = $parsed['path'] ?? 'no-path';
         parse_str($parsed['query'] ?? '', $query);
         $headers = self::getHeaders();
-        $body = self::getBody();
+        $body    = self::getBody();
 
         return new Request($uri, $headers, $body, $query);
     }

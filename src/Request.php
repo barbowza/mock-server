@@ -8,7 +8,7 @@ namespace MockServer;
 class Request
 {
     private string $uri;
-    private array $query;
+    private array  $query;
     private array  $headers;
     private string $body;
 
@@ -22,7 +22,7 @@ class Request
         $this->uri     = $uri;
         $this->headers = $headers;
         $this->body    = $body;
-        $this->query  = $query;
+        $this->query   = $query;
     }
 
     /**
