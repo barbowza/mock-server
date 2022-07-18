@@ -14,12 +14,12 @@ class ConfigTest extends TestCase
     public function test_constructor_throws_on_bad_path(): void
     {
         $this->expectException(RuntimeException::class);
-        new Config('/not/a/real/path');
+        new Config(null, '/not/a/real/path');
     }
 
     public function test_can_load_routes_from_config_with_routes(): void
     {
-        $config = new Config(self::PATH_CONFIG_DEFAULT);
+        $config = new Config(null, self::PATH_CONFIG_DEFAULT);
 
         /** @var Route[] $routes */
         $routes = $config->getRoutes();
@@ -36,7 +36,7 @@ class ConfigTest extends TestCase
 
     public function test_config_getRoutes_without_routes_returns_emergency_route(): void
     {
-        $config = new Config(self::PATH_CONFIG_NO_ROUTES);
+        $config = new Config(null, self::PATH_CONFIG_NO_ROUTES);
 
         $routes = $config->getRoutes();
 

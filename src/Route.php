@@ -51,6 +51,11 @@ class Route
         return $this->verb;
     }
 
+    /**
+     * @param array $context Block of information silently passed to included Script
+     * @return string|null
+     * @noinspection PhpUnusedParameterInspection
+     */
     private function executeScript(array $context): ?string
     {
         $path = realpath($this->scriptPath);

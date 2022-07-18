@@ -5,9 +5,18 @@ declare (strict_types=1);
 
 namespace MockServer;
 
+use Psr\Log\LoggerInterface;
+
 class Router
 {
     private array $routes;
+
+    private ?LoggerInterface $logger;
+
+    public function __construct(?LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+    }
 
     public function addRoute(Route $route): void
     {
@@ -23,11 +32,18 @@ class Router
          * @var Route $route
          */
         foreach ($this->routes as $pattern => $route) {
-            if (preg_match($pattern, $uri, $params) === 1) {
-                array_shift($params);
+            if (preg_match($pattern, $uri, $matches) === 1) {
+                $this->logInfo('Router matched:' . $matches[0]);
                 return $route->getResponse($request);
             }
         }
         return null;
+    }
+
+    private function logInfo(string $message): void
+    {
+        if ($this->logger) {
+            $this->logger->info($message);
+        }
     }
 }

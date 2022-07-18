@@ -5,19 +5,25 @@ declare (strict_types=1);
 
 namespace MockServer;
 
+use Psr\Log\LoggerInterface;
+
 class Server
 {
     private Router $router;
 
-    public function __construct(Router $router)
+    private ?LoggerInterface $logger;
+
+    public function __construct(Router $router, ?LoggerInterface $logger = null)
     {
         $this->router = $router;
+        $this->logger = $logger;
     }
 
     public function handleRequest(Request $request): ?string
     {
         if (is_null($response = $this->router->execute($request))) {
             $response = '404 mock-server did not match uri: ' . $request->getUri();
+            $this->logInfo($response);
         }
         return $response;
     }
@@ -52,5 +58,12 @@ class Server
     private static function getBody(): ?string
     {
         return file_get_contents("php://input");
+    }
+
+    private function logInfo(string $message): void
+    {
+        if ($this->logger) {
+            $this->logger->info($message);
+        }
     }
 }

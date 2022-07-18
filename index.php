@@ -6,14 +6,21 @@ namespace MockServer;
 
 require 'vendor/autoload.php';
 
-$config = new Config();
+use Analog\Logger;
+use Analog\Handler\Stderr;
 
-$router = new Router();
+$logger = new Logger();
+$logger->handler(Stderr::init());
+
+$config = new Config($logger);
+
+$router = new Router($logger);
 foreach ($config->getRoutes() as $route) {
     $router->addRoute($route);
 }
 
-$server  = new Server($router);
+$server  = new Server($router, $logger);
 $request = Server::getRequest();
 
 echo $server->handleRequest($request);
+

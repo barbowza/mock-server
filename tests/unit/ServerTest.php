@@ -36,8 +36,6 @@ class ServerTest extends TestCase
 
         $request = Server::getRequest();
 
-        $this->assertInstanceOf(Request::class, $request);
-
         $this->assertEquals('/some/path', $request->getUri());
         $this->assertEquals(['a' => 1], $request->getQuery());
     }

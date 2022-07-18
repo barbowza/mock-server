@@ -5,27 +5,34 @@ declare(strict_types=1);
 
 namespace MockServer;
 
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class Config
 {
-    private const DEFAULT_CONFIG_DIR = __DIR__ . '/../config';
+    public const DEFAULT_CONFIG_DIR = __DIR__ . '/../config';
 
-    /** Flag used in file as being a config */
-    private const MOCK_SERVER_CONFIG = 'mock-server-config';
+    public const CONFIG_GLOB = '/*.config.php';
 
-    private const TOKEN_ROUTES = 'routes';
-    private const TOKEN_URI_REGEX = 'uri';
-    private const TOKEN_VERB = 'verb';
-    private const TOKEN_RESPONSE = 'response';
-    private const TOKEN_STATIC_DATA = 'static-data';
-    private const TOKEN_SCRIPT_FILE = 'script-file';
+    /** Flag used to indicate file is a config */
+    public const MOCK_SERVER_CONFIG = 'mock-server-config';
+
+    public const TOKEN_ROUTES = 'routes';
+    public const TOKEN_URI_REGEX = 'uri';
+    public const TOKEN_VERB = 'verb';
+    public const TOKEN_RESPONSE = 'response';
+    public const TOKEN_STATIC_DATA = 'static-data';
+    public const TOKEN_SCRIPT_FILE = 'script-file';
+
+    private ?LoggerInterface $logger;
 
     private string $configPath;
     private ?array $config = null;
 
-    public function __construct(string $configPath = self::DEFAULT_CONFIG_DIR)
+    public function __construct(?LoggerInterface $logger = null, string $configPath = self::DEFAULT_CONFIG_DIR)
     {
+        $this->logger = $logger;
+
         if ($path = realpath($configPath)) {
             $this->configPath = $path;
         } else {
@@ -49,7 +56,6 @@ class Config
                 self::TOKEN_RESPONSE  => $response
             ] = $route + $defaults;
 
-            /** @noinspection DisconnectedForeachInstructionInspection */
             [
                 self::TOKEN_STATIC_DATA => $staticData,
                 self::TOKEN_SCRIPT_FILE => $scriptFile
@@ -70,12 +76,12 @@ class Config
             return $this->config;
         }
 
-        return $this->config = self::LoadFromConfigDir($this->configPath);
+        return $this->config = $this->LoadFromConfigDir();
     }
 
-    private static function LoadFromConfigDir(?string $configPath): array
+    private function LoadFromConfigDir(): array
     {
-        $files = glob($configPath . '/' . '*.config.php');
+        $files = glob($this->configPath . self::CONFIG_GLOB);
 
         $routes = [];
         foreach ($files as $filename) {
@@ -88,8 +94,8 @@ class Config
         }
 
         if (empty($routes)) {
-            $msg = "NO ROUTES FOUND in config at " . $configPath;
-            error_log($msg);
+            $msg = "NO ROUTES FOUND in config at " . $this->configPath;
+            $this->logAlert($msg);
             $routes = self::fallbackRoutesConfig($msg);
         }
 
@@ -117,5 +123,12 @@ class Config
                 ]
             ]
         ];
+    }
+
+    private function logAlert(string $message): void
+    {
+        if ($this->logger) {
+            $this->logger->alert($message);
+        }
     }
 }
