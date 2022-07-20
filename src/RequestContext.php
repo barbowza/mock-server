@@ -37,6 +37,11 @@ class RequestContext
         return $this->request->getQuery();
     }
 
+    public function getVersion(): string
+    {
+        return Server::VERSION;
+    }
+
     public function toArray(): array
     {
         return [

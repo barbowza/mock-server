@@ -22,5 +22,5 @@ foreach ($config->getRoutes() as $route) {
 $server  = new Server($router, $logger);
 $request = Server::getRequest();
 
-echo $server->handleRequest($request);
+$server->handleRequest($request)->sendResponse();
 

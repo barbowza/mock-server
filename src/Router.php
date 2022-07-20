@@ -23,7 +23,7 @@ class Router
         $this->routes[$route->getUriRegex()] = $route;
     }
 
-    public function execute(Request $request): ?string
+    public function execute(Request $request): ?Response
     {
         $uri = $request->getUri();
 

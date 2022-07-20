@@ -27,7 +27,8 @@ class ServerTest extends TestCase
         $server = new Server($mockRouter);
 
         $request = new Request('/some/path/not/matched');
-        $this->assertStringContainsString('404', $server->handleRequest($request));
+
+        $this->assertStringContainsString('404', (string)$server->handleRequest($request));
     }
 
     public function test_server_getResponse(): void

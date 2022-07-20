@@ -26,13 +26,19 @@ class Route
         $this->scriptPath     = $scriptPath;
     }
 
-    public function getResponse(RequestContext $context): string
+    public function getResponse(RequestContext $context): Response
     {
-        if (!is_null($this->scriptPath)) {
-            return $this->executeScript($context) ?? 'no response';
+        $response = new Response('no response');
+
+        if ($this->scriptPath) {
+            return $this->executeScript($context, $response);
         }
 
-        return $this->staticResponse ?? 'no response';
+        if ($this->staticResponse) {
+            $response->setBody($this->staticResponse);
+        }
+
+        return $response;
     }
 
     public function getUriRegex(): ?string
@@ -47,15 +53,16 @@ class Route
 
     /**
      * @param RequestContext $context Block of information silently passed to included Script
-     * @return string|null
+     * @param Response $response Response to be populated and returned by script
+     * @return Response
      * @noinspection PhpUnusedParameterInspection
      */
-    private function executeScript(RequestContext $context): ?string
+    private function executeScript(RequestContext $context, Response $response): Response
     {
         $path = realpath($this->scriptPath);
         if ($path) {
             return include $path;
         }
-        return null;
+        return $response;
     }
 }

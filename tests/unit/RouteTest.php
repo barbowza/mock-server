@@ -21,7 +21,7 @@ class RouteTest extends TestCase
         $this->assertIsString($route->getUriRegex());
         $this->assertEquals('VERB', $route->getVerb());
 
-        $this->assertEquals('hello world', $route->getResponse($this->getRequestContext()));
+        $this->assertStringContainsString('hello world', (string)$route->getResponse($this->getRequestContext()));
     }
 
     public function test_route_script_response_correct(): void
@@ -33,7 +33,7 @@ class RouteTest extends TestCase
             dirname(__DIR__) . '/_data/config-default/response-script.php'
         );
 
-        $this->assertStringContainsString('response-script', $route->getResponse($this->getRequestContext()));
+        $this->assertStringContainsString('response-script', (string)$route->getResponse($this->getRequestContext()));
     }
 
     protected function getRequestContext(): RequestContext

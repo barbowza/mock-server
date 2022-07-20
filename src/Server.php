@@ -9,6 +9,8 @@ use Psr\Log\LoggerInterface;
 
 class Server
 {
+    public const VERSION = '1.0.0';
+
     private Router $router;
 
     private ?LoggerInterface $logger;
@@ -19,12 +21,16 @@ class Server
         $this->logger = $logger;
     }
 
-    public function handleRequest(Request $request): ?string
+    public function handleRequest(Request $request): Response
     {
         if (is_null($response = $this->router->execute($request))) {
-            $response = '404 mock-server did not match uri: ' . $request->getUri();
-            $this->logInfo($response);
+            $response = new Response(
+                'Unmatched uri: ' . $request->getUri(),
+                Response::HTTP_NOT_FOUND
+            );
+            $this->logInfo((string)$response);
         }
+
         return $response;
     }
 

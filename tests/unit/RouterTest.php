@@ -20,7 +20,7 @@ class RouterTest extends TestCase
 
         $this->assertNull($router->execute(new Request('no-match')));
 
-        $this->assertEquals('some-response', $router->execute(new Request('/some-path')));
+        $this->assertStringContainsString('some-response', (string)$router->execute(new Request('/some-path')));
     }
 
 
@@ -30,9 +30,11 @@ class RouterTest extends TestCase
         $router->addRoute(new Route(
             '!^/path/with/params/(\d+)/(\w+)$!',
             '*',
-            'some-response {{\1}} {{\2}}'
+            'some-response'
         ));
+
         # TODO test params appear in response
-        $this->assertStringContainsString('some-response', $router->execute(new Request('/path/with/params/123/four')));
+
+        $this->assertStringContainsString('some-response', (string)$router->execute(new Request('/path/with/params/123/four')));
     }
 }
