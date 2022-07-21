@@ -11,17 +11,17 @@ class Response
     public const HTTP_NOT_FOUND = 404;
     public const HTTP_INTERNAL_SERVER_ERROR = 500;
 
-    private string $body;
+    private ?string $body;
     private int $code;
     private array  $headers;
 
     /**
-     * @param string $body
+     * @param ?string $body
      * @param int $code
      * @param array $headers
      */
     public function __construct(
-        string $body = '',
+        ?string $body = null,
         int $code = self::HTTP_OK,
         array $headers = []
     ) {
@@ -30,7 +30,7 @@ class Response
         $this->headers = $headers;
     }
 
-    public function setBody(string $body): Response
+    public function setBody(?string $body): Response
     {
         $this->body = $body;
         return $this;
@@ -56,7 +56,9 @@ class Response
 
         http_response_code($this->code);
 
-        echo $this->body;
+        if ($this->body) {
+            echo $this->body;
+        }
     }
 
     public function __toString()

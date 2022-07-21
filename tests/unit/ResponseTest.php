@@ -37,6 +37,17 @@ class ResponseTest extends TestCase
         $this->assertEquals(123, http_response_code());
     }
 
+    public function test_response_body_null(): void
+    {
+        $response = new Response();
+
+        ob_start();
+        $response->sendResponse();
+        $result = ob_get_clean();
+
+        $this->assertEmpty($result);
+    }
+
     protected static function getHeaders(): array
     {
         // In cli headers_list() always returns [], XDebug has a fallback
