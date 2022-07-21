@@ -3,12 +3,17 @@
 return [
     'mock-server-config' => '1.0.0',
 
+    'description' => 'Test configuration',
+
     'routes' => [
         [
             'uri'      => '!^/hello$!i',
             'verb'     => 'GET',
             'response' => [
                 'static-data' => 'string from staticData',
+                'headers' => [
+                    'Content-Type: text/plain'
+                ]
             ],
         ], [
             'uri'      => '!^/param/([^/]+)/?$!i',

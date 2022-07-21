@@ -45,8 +45,22 @@ class ConfigTest extends TestCase
         $this->assertStringContainsString('*', $routes[0]->getUriRegex());
     }
 
-    public function test_no_config_file_uses_defaults(): void
+    public function test_no_config_files_found_uses_defaults(): void
     {
         $this->assertIsArray((new Config())->getRoutes());
+    }
+
+    public function test_config_response_defines_headers(): void
+    {
+        $config = new Config(null, self::PATH_CONFIG_DEFAULT);
+
+        /** @var Route[] $routes */
+        $routes = $config->getRoutes();
+
+        $this->assertIsArray($routes);
+
+        $this->assertInstanceOf(Route::class, $routes[0]);
+
+        $this->assertStringContainsString('Content-Type', $routes[0]->getHeaders()[0]);
     }
 }

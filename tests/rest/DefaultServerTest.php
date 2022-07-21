@@ -3,14 +3,15 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Client as GuzzleClient;
 
 class DefaultServerTest extends TestCase
 {
-    private $http;
+    private ?GuzzleClient $http;
 
     public function setUp(): void
     {
-        $this->http = new GuzzleHttp\Client(['base_uri' => 'http://localhost:8765']);
+        $this->http = new GuzzleClient(['base_uri' => 'http://localhost:8765']);
     }
 
     public function tearDown(): void
@@ -25,6 +26,8 @@ class DefaultServerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertStringContainsString('Operational', $response->getBody()->getContents());
+
+        $this->assertStringContainsString('json', $response->getHeader('Content-Type')[0]);
     }
 
     public function test_default_status_dynamic_response(): void

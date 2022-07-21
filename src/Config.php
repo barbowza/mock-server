@@ -23,6 +23,7 @@ class Config
     public const TOKEN_RESPONSE = 'response';
     public const TOKEN_STATIC_DATA = 'static-data';
     public const TOKEN_SCRIPT_FILE = 'script-file';
+    public const TOKEN_HEADERS = 'headers';
 
     private ?LoggerInterface $logger;
 
@@ -48,24 +49,26 @@ class Config
             [self::TOKEN_URI_REGEX, self::TOKEN_VERB, self::TOKEN_RESPONSE, self::TOKEN_STATIC_DATA, self::TOKEN_SCRIPT_FILE],
             null
         );
+        $defaults[self::TOKEN_HEADERS] = [];
 
         foreach ($config['routes'] as $route) {
             [
                 self::TOKEN_URI_REGEX => $uri,
                 self::TOKEN_VERB      => $verb,
-                self::TOKEN_RESPONSE  => $response
+                self::TOKEN_RESPONSE  => $response,
             ] = $route + $defaults;
 
             [
                 self::TOKEN_STATIC_DATA => $staticData,
-                self::TOKEN_SCRIPT_FILE => $scriptFile
+                self::TOKEN_SCRIPT_FILE => $scriptFile,
+                self::TOKEN_HEADERS => $headers,
             ] = ($response ?? []) + $defaults;
 
             if ($scriptFile) {
                 $scriptFile = realpath($this->configDir . "/{$scriptFile}") ?: null;
             }
 
-            $routes[] = new Route($uri, $verb, $staticData, $scriptFile);
+            $routes[] = new Route($uri, $verb, $staticData, $scriptFile, $headers);
         }
         return $routes ?? null;
     }
