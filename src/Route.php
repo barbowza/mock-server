@@ -67,6 +67,11 @@ class Route
         return $this->verb;
     }
 
+    public function getHeaders(): array
+    {
+        return $this->responseHeaders;
+    }
+
     /**
      * @param RequestContext $context Block of information silently passed to included Script
      * @param Response $response Response to be populated and returned by script

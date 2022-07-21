@@ -43,12 +43,12 @@ class RouteTest extends TestCase
             'VERB',
             'some static response',
             null,
-            ['Some: header']
+            ['X-Some: custom-header']
         );
 
         $this->assertStringContainsString(
-            'response',
-            (string)$route->getResponse($this->getRequestContext()));
+            'custom-header',
+            $route->getHeaders()[0]);
     }
 
     protected function getRequestContext(): RequestContext
