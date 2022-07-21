@@ -13,22 +13,38 @@ class Route
     private ?string $staticResponse;
     private ?string $scriptPath;
 
+    private array $responseHeaders;
+
+    /**
+     * @param string|null $uriRegex
+     * @param string|null $verb
+     * @param string|null $staticResponse
+     * @param string|null $scriptPath
+     * @param string[] $responseHeaders
+     */
     public function __construct(
         ?string $uriRegex,
         ?string $verb,
         ?string $staticResponse,
-        ?string $scriptPath = null
+        ?string $scriptPath = null,
+        array $responseHeaders = []
     ) {
         $this->uriRegex = $uriRegex;
         $this->verb     = $verb;
 
         $this->staticResponse = $staticResponse;
         $this->scriptPath     = $scriptPath;
+
+        $this->responseHeaders = $responseHeaders;
     }
 
     public function getResponse(RequestContext $context): Response
     {
-        $response = new Response('no response');
+        $response = new Response();
+
+        foreach($this->responseHeaders as $header) {
+            $response->addHeader($header);
+        }
 
         if ($this->scriptPath) {
             return $this->executeScript($context, $response);

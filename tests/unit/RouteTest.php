@@ -36,6 +36,21 @@ class RouteTest extends TestCase
         $this->assertStringContainsString('response-script', (string)$route->getResponse($this->getRequestContext()));
     }
 
+    public function test_route_accepts_headers(): void
+    {
+        $route = new Route(
+            '!^/some-uri$!',
+            'VERB',
+            'some static response',
+            null,
+            ['Some: header']
+        );
+
+        $this->assertStringContainsString(
+            'response',
+            (string)$route->getResponse($this->getRequestContext()));
+    }
+
     protected function getRequestContext(): RequestContext
     {
         return Server::createContext(new Request('/some-uri'));
