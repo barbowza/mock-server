@@ -26,17 +26,17 @@ class Config
 
     private ?LoggerInterface $logger;
 
-    private string $configPath;
+    private string $configDir;
     private ?array $config = null;
 
-    public function __construct(?LoggerInterface $logger = null, string $configPath = self::DEFAULT_CONFIG_DIR)
+    public function __construct(?LoggerInterface $logger = null, string $configDir = self::DEFAULT_CONFIG_DIR)
     {
         $this->logger = $logger;
 
-        if ($path = realpath($configPath)) {
-            $this->configPath = $path;
+        if ($dir = realpath($configDir)) {
+            $this->configDir = $dir;
         } else {
-            throw new RuntimeException("CONFIG file not found at $configPath");
+            throw new RuntimeException("CONFIG file not found at $configDir");
         }
     }
 
@@ -62,7 +62,7 @@ class Config
             ] = ($response ?? []) + $defaults;
 
             if ($scriptFile) {
-                $scriptFile = realpath($this->configPath . "/$scriptFile") ?: null;
+                $scriptFile = realpath($this->configDir . "/{$scriptFile}") ?: null;
             }
 
             $routes[] = new Route($uri, $verb, $staticData, $scriptFile);
@@ -81,7 +81,7 @@ class Config
 
     private function LoadFromConfigDir(): array
     {
-        $files = glob($this->configPath . self::CONFIG_GLOB);
+        $files = glob($this->configDir . self::CONFIG_GLOB);
 
         $routes = [];
         foreach ($files as $filename) {
@@ -94,7 +94,7 @@ class Config
         }
 
         if (empty($routes)) {
-            $msg = "NO ROUTES FOUND in config at " . $this->configPath;
+            $msg = "NO ROUTES FOUND in config at " . $this->configDir;
             $this->logAlert($msg);
             $routes = self::fallbackRoutesConfig($msg);
         }
@@ -112,7 +112,12 @@ class Config
         return false;
     }
 
-    private static function fallbackRoutesConfig($msg): array
+    /**
+     * Provide an emergency fallback route for when no routes found in any config file
+     * @param string $msg
+     * @return array[]
+     */
+    private static function fallbackRoutesConfig(string $msg = 'fallback response'): array
     {
         return [
             [

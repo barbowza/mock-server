@@ -3,12 +3,12 @@
 return [
     'mock-server-config' => '1.0.0',
 
-    "routes" => [
+    'routes' => [
         [
             'uri'      => '!^/hello$!i',
             'verb'     => 'GET',
             'response' => [
-                'static-data' => "string from staticData",
+                'static-data' => 'string from staticData',
             ],
         ], [
             'uri'      => '!^/param/([^/]+)/?$!i',
@@ -20,7 +20,7 @@ return [
             'uri'      => '!^/dynamic/php?$!i',
             'verb'     => 'GET',
             'response' => [
-                'script-file' => "response-script.php",
+                'script-file' => 'response-script.php',
             ],
         ]
     ],
