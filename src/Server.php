@@ -6,6 +6,7 @@ declare (strict_types=1);
 namespace MockServer;
 
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class Server
 {
@@ -23,10 +24,18 @@ class Server
 
     public function handleRequest(Request $request): Response
     {
-        if (is_null($response = $this->router->execute($request))) {
+        try {
+            if (is_null($response = $this->router->execute($request))) {
+                $response = new Response(
+                    'Unmatched uri: ' . $request->getUri(),
+                    Response::HTTP_NOT_FOUND
+                );
+                $this->logInfo((string)$response);
+            }
+        } catch (RuntimeException $e) {
             $response = new Response(
-                'Unmatched uri: ' . $request->getUri(),
-                Response::HTTP_NOT_FOUND
+                'Server exception: ' . $e->getFile() .' '. $request->getVerb() . ' ' . $request->getUri() . ' ' . trim($request->getBody()),
+                Response::HTTP_INTERNAL_SERVER_ERROR
             );
             $this->logInfo((string)$response);
         }

@@ -25,7 +25,7 @@ class ConfigTest extends TestCase
         $routes = $config->getRoutes();
 
         $this->assertIsArray($routes);
-        $this->assertCount(3, $routes);
+        $this->assertGreaterThan(1, count($routes));
 
         $this->assertInstanceOf(Route::class, $routes[0]);
 

@@ -27,6 +27,13 @@ return [
             'response' => [
                 'script-file' => 'mock-server-reflect.php',
             ],
+        ], [
+            'description' => 'Return a server exception',
+            'uri'      => '!^/mock-server/error$!i',
+            'verb'     => '*',
+            'response' => [
+                'script-file' => 'mock-server-exception.php',
+            ],
         ],
     ]
 ];

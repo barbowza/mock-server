@@ -27,6 +27,13 @@ return [
             'response' => [
                 'script-file' => 'response-script.php',
             ],
-        ]
+        ], [
+            'description' => 'Return a server exception',
+            'uri'      => '!^/exception$!i',
+            'verb'     => '*',
+            'response' => [
+                'script-file' => 'mock-server-exception.php',
+            ],
+        ],
     ],
 ];

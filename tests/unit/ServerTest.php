@@ -40,4 +40,16 @@ class ServerTest extends TestCase
         $this->assertEquals('/some/path', $request->getUri());
         $this->assertEquals(['a' => 1], $request->getQuery());
     }
+
+    public function test_server_error_response(): void
+    {
+        $mockRouter = $this->createStub(Router::class);
+        $mockRouter->method('execute')
+            ->willThrowException(new RuntimeException());
+
+        /** @var Router $mockRouter */
+        $server =  new Server($mockRouter);
+
+        $this->assertStringContainsString('500', (string)$server->handleRequest(new Request('/')));
+    }
 }
