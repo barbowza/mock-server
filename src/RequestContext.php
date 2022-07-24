@@ -8,55 +8,77 @@ namespace MockServer;
 class RequestContext
 {
     private Request $request;
+    private Route   $route;
 
     /**
      * @param Request $request
+     * @param Route $route
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, Route $route)
     {
         $this->request = $request;
+        $this->route  = $route;
     }
 
-    public function getUri(): string
+    public function getRequestUri(): string
     {
         return $this->request->getUri();
     }
 
-    public function getMethod(): string
+    public function getRequestMethod(): string
     {
         return $this->request->getMethod();
     }
 
-    public function getHeaders(): array
+    public function getRequestHeaders(): array
     {
         return $this->request->getHeaders();
     }
 
-    public function getBody(): string
+    public function getRequestBody(): string
     {
         return $this->request->getBody();
     }
 
-    public function getQuery(): array
+    public function getRequestQuery(): array
     {
         return $this->request->getQuery();
     }
 
-    public function getVersion(): string
+    public function getServerVersion(): string
     {
         return Server::VERSION;
+    }
+
+    public function getRouteUriRegex(): string
+    {
+        return $this->route->getUriRegex();
+    }
+
+    public function getRouteMethods(): string
+    {
+        return $this->route->getMethods();
+    }
+
+    public function getRouteHeaders(): array
+    {
+        return $this->route->getHeaders();
     }
 
     public function toArray(): array
     {
         return [
-            'request.uri'     => $this->getUri(),
-            'request.method'  => $this->getMethod(),
-            'request.headers' => $this->getHeaders(),
-            'request.body'    => $this->getBody(),
-            'request.query'   => $this->getQuery(),
+            'request.uri'     => $this->getRequestUri(),
+            'request.method'  => $this->getRequestMethod(),
+            'request.headers' => $this->getRequestHeaders(),
+            'request.body'    => $this->getRequestBody(),
+            'request.query'   => $this->getRequestQuery(),
 
-            'server.version' => $this->getVersion()
+            'server.version' => $this->getServerVersion(),
+
+            'route.uriRegex' => $this->getRouteUriRegex(),
+            'route.methods' => $this->getRouteMethods(),
+            'route.headers' => $this->getRouteHeaders(),
         ];
 
     }

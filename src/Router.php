@@ -36,7 +36,7 @@ class Router
                 $this->logInfo('Router matched:' . $matches[0]);
 
                 if ($route->isPermittedMethod($request->getMethod())) {
-                    return $route->getResponse(Server::createContext($request));
+                    return $route->getResponse(Server::createContext($request, $route));
                 }
 
                 return new Response(

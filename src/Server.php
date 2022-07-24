@@ -59,9 +59,9 @@ class Server
         return new Request($uri, $method, $headers, $body, $query);
     }
 
-    public static function createContext(Request $request): RequestContext
+    public static function createContext(Request $request, Route $route): RequestContext
     {
-        return new RequestContext($request);
+        return new RequestContext($request, $route);
     }
 
     private static function getHeaders(): array

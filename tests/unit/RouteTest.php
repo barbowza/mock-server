@@ -53,7 +53,10 @@ class RouteTest extends TestCase
 
     protected function getRequestContext(): RequestContext
     {
-        return Server::createContext(new Request('/some-uri'));
+        return Server::createContext(
+            new Request('/some-uri'),
+            new Route('')
+        );
     }
 
     public function test_route_methods_contains_method(): void
