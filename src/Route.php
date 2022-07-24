@@ -8,7 +8,7 @@ namespace MockServer;
 class Route
 {
     private ?string $uriRegex;
-    private ?string $verb;
+    private array $methods;
 
     private ?string $staticResponse;
     private ?string $scriptPath;
@@ -17,20 +17,20 @@ class Route
 
     /**
      * @param string|null $uriRegex
-     * @param string|null $verb
+     * @param string|null $methods comma separated list of request methods permitted for route or '*' for all
      * @param string|null $staticResponse
      * @param string|null $scriptPath
      * @param string[] $responseHeaders
      */
     public function __construct(
-        ?string $uriRegex,
-        ?string $verb,
-        ?string $staticResponse,
+        string $uriRegex,
+        ?string $methods = null,
+        ?string $staticResponse = null,
         ?string $scriptPath = null,
         array $responseHeaders = []
     ) {
         $this->uriRegex = $uriRegex;
-        $this->verb     = $verb;
+        $this->methods  = explode(',', str_replace(' ', '', $methods ?? '*'));
 
         $this->staticResponse = $staticResponse;
         $this->scriptPath     = $scriptPath;
@@ -62,9 +62,14 @@ class Route
         return $this->uriRegex;
     }
 
-    public function getVerb(): ?string
+    public function getMethods(): ?string
     {
-        return $this->verb;
+        return implode(', ', $this->methods);
+    }
+
+    public function isPermittedMethod($method): bool
+    {
+        return !empty(array_intersect(['*', $method], $this->methods));
     }
 
     public function getHeaders(): array

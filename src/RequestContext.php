@@ -22,6 +22,11 @@ class RequestContext
         return $this->request->getUri();
     }
 
+    public function getMethod(): string
+    {
+        return $this->request->getMethod();
+    }
+
     public function getHeaders(): array
     {
         return $this->request->getHeaders();
@@ -45,10 +50,13 @@ class RequestContext
     public function toArray(): array
     {
         return [
-            'uri'     => $this->getUri(),
-            'headers' => $this->getHeaders(),
-            'body'    => $this->getBody(),
-            'query'   => $this->getQuery(),
+            'request.uri'     => $this->getUri(),
+            'request.method'  => $this->getMethod(),
+            'request.headers' => $this->getHeaders(),
+            'request.body'    => $this->getBody(),
+            'request.query'   => $this->getQuery(),
+
+            'server.version' => $this->getVersion()
         ];
 
     }

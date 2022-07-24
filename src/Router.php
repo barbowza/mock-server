@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 
 class Router
 {
+    /** @var Route[] $routes */
     private array $routes;
 
     private ?LoggerInterface $logger;
@@ -25,16 +26,24 @@ class Router
 
     public function execute(Request $request): ?Response
     {
-        $uri = $request->getUri();
-
         /**
-         * @var string $pattern
+         * @var string $uriRegex
          * @var Route $route
          */
-        foreach ($this->routes as $pattern => $route) {
-            if (preg_match($pattern, $uri, $matches) === 1) {
+        foreach ($this->routes as $uriRegex => $route) {
+            if (preg_match($uriRegex, $request->getUri(), $matches) === 1) {
+
                 $this->logInfo('Router matched:' . $matches[0]);
-                return $route->getResponse(Server::createContext($request));
+
+                if ($route->isPermittedMethod($request->getMethod())) {
+                    return $route->getResponse(Server::createContext($request));
+                }
+
+                return new Response(
+                    '405 Method Not Allowed',
+                    Response::HTTP_METHOD_NOT_ALLOWED,
+                    ['Allow: ' . $route->getMethods()]
+                );
             }
         }
         return null;

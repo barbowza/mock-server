@@ -8,38 +8,40 @@ namespace MockServer;
 class Request
 {
     private string $uri;
+    private string $method;
     private array  $headers;
     private string $body;
     private array  $query;
-    private string $verb;
 
     /**
      * @param string $uri
-     * @param array $headers
-     * @param string $body
-     * @param array $query
-     * @param string $verb
+     * @param ?string $method
+     * @param ?array $headers
+     * @param ?string $body
+     * @param ?array $query
      */
     public function __construct(
         string $uri,
-        array $headers = [],
-        string $body = '',
-        array $query = [],
-        string $verb = ''
+        ?string $method = null,
+        ?array $headers = null,
+        ?string $body = null,
+        ?array $query = null
     ) {
         $this->uri     = $uri;
-        $this->headers = $headers;
-        $this->body    = $body;
-        $this->query   = $query;
-        $this->verb   = $verb;
+        $this->method   = $method ?? 'GET';
+        $this->headers = $headers ?? [];
+        $this->body    = $body ?? '';
+        $this->query   = $query ?? [];
     }
 
-    /**
-     * @return string
-     */
     public function getUri(): string
     {
         return $this->uri;
+    }
+
+    public function getMethod(): string
+    {
+        return $this->method;
     }
 
     public function getHeaders(): array
@@ -55,10 +57,5 @@ class Request
     public function getQuery(): array
     {
         return $this->query;
-    }
-
-    public function getVerb(): string
-    {
-        return $this->verb;
     }
 }

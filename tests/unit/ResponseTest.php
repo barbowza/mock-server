@@ -30,7 +30,7 @@ class ResponseTest extends TestCase
         $this->assertEquals('test-body', $body);
 
         $this->assertFalse(headers_sent());
-        $headers = self::getHeaders();
+        $headers = self::getEmittedHeaders();
         $this->assertIsArray($headers);
         $this->assertCount(1, $headers);
 
@@ -48,7 +48,21 @@ class ResponseTest extends TestCase
         $this->assertEmpty($result);
     }
 
-    protected static function getHeaders(): array
+    public function test_response_toString(): void
+    {
+        $response = new Response(
+            'some-body',
+            321,
+            [
+                'X-Header: foo',
+                'X-Fedder: bar',
+            ]
+        );
+
+        $this->assertEquals('321 some-body X-Header: foo, X-Fedder: bar', (string)$response);
+    }
+
+    protected static function getEmittedHeaders(): array
     {
         // In cli headers_list() always returns [], XDebug has a fallback
         if ((PHP_SAPI === 'cli') && function_exists('xdebug_get_headers')) {

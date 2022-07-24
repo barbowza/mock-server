@@ -14,12 +14,12 @@ class RouteTest extends TestCase
     {
         $route = new Route(
             '!^/some-uri$!',
-            'VERB',
+            'METHOD',
             'hello world'
         );
 
         $this->assertIsString($route->getUriRegex());
-        $this->assertEquals('VERB', $route->getVerb());
+        $this->assertEquals('METHOD', $route->getMethods());
 
         $this->assertStringContainsString('hello world', (string)$route->getResponse($this->getRequestContext()));
     }
@@ -28,7 +28,7 @@ class RouteTest extends TestCase
     {
         $route = new Route(
             '!^/some-uri$!',
-            'VERB',
+            null,
             null,
             dirname(__DIR__) . '/_data/config-default/response-script.php'
         );
@@ -40,7 +40,7 @@ class RouteTest extends TestCase
     {
         $route = new Route(
             '!^/some-uri$!',
-            'VERB',
+            null,
             'some static response',
             null,
             ['X-Some: custom-header']
@@ -54,5 +54,40 @@ class RouteTest extends TestCase
     protected function getRequestContext(): RequestContext
     {
         return Server::createContext(new Request('/some-uri'));
+    }
+
+    public function test_route_methods_contains_method(): void
+    {
+        $route = new Route(
+            '!^/some-uri$!',
+            'GET, PUT, OPTIONS'
+        );
+
+        $this->assertStringContainsString('OPTIONS', $route->getMethods());
+    }
+
+    public function test_route_methods_permitted(): void
+    {
+        $route = new Route(
+            '!^/some-uri$!',
+            'GET, POST',
+        );
+
+        $this->assertTrue($route->isPermittedMethod('GET'));
+        $this->assertTrue($route->isPermittedMethod('POST'));
+
+        $this->assertFalse($route->isPermittedMethod('DELETE'));
+    }
+
+    public function test_route_all_methods_permitted(): void
+    {
+        $route = new Route(
+            '!^/some-uri$!',
+            '*',
+        );
+
+        $this->assertTrue($route->isPermittedMethod('GET'));
+        $this->assertTrue($route->isPermittedMethod('POST'));
+        $this->assertTrue($route->isPermittedMethod('DELETE'));
     }
 }

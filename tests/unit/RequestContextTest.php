@@ -26,16 +26,30 @@ class RequestContextTest extends TestCase
     {
         $context = new RequestContext(self::getRequest());
 
-        $this->assertEquals('some-body', $context->getBody());
+        $this->assertStringContainsString('MyVariableTwo', $context->getBody());
+    }
+
+    public function test_context_array(): void
+    {
+        $context = new RequestContext(self::getRequest());
+
+        $this->assertContains('/some-path', $context->toArray());
+        $this->assertArrayHasKey('request.method', $context->toArray());
+        $this->assertArrayHasKey('server.version', $context->toArray());
     }
 
     protected static function getRequest(): Request
     {
         return new Request(
             '/some-path',
-            ["Accept" => "*/*"],
-            'some-body'
+            'GET',
+            ["Content-Type" => "application/x-www-form-urlencoded"],
+            'MyVariableOne=ValueOne&MyVariableTwo=ValueTwo',
+            [
+                'p1' => 'foo',
+                'p2' => 'bar'
+            ]
+
         );
     }
-
 }

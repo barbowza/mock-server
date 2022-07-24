@@ -28,6 +28,7 @@ class RequestTest extends TestCase
     {
         $request = new Request(
             '/some-path',
+            null,
             ["Accept" => "*/*"],
             'some-body',
             ['param1' => 'some-value']
@@ -36,17 +37,14 @@ class RequestTest extends TestCase
         $this->assertEquals(['param1' => 'some-value'], $request->getQuery());
     }
 
-    public function test_request_verb(): void
+    public function test_request_method(): void
     {
         $request = new Request(
             '/some-path',
-            ["Accept" => "*/*"],
-            'some-body',
-            ['param1' => 'some-value'],
-            'VERB'
+            'METHOD'
         );
 
-        $this->assertEquals('VERB', $request->getVerb());
+        $this->assertEquals('METHOD', $request->getMethod());
     }
 
 }

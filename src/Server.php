@@ -10,7 +10,7 @@ use RuntimeException;
 
 class Server
 {
-    public const VERSION = '1.0.0';
+    public const VERSION = '1.1.0';
 
     private Router $router;
 
@@ -34,7 +34,7 @@ class Server
             }
         } catch (RuntimeException $e) {
             $response = new Response(
-                'Server exception: ' . $e->getFile() .' '. $request->getVerb() . ' ' . $request->getUri() . ' ' . trim($request->getBody()),
+                'Server exception: ' . $e->getFile() . ' ' . $request->getMethod() . ' ' . $request->getUri() . ' ' . trim($request->getBody()),
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
             $this->logInfo((string)$response);
@@ -49,13 +49,14 @@ class Server
      */
     public static function getRequest(): Request
     {
-        $parsed = parse_url($_SERVER['REQUEST_URI']);
-        $uri    = $parsed['path'] ?? 'no-path';
-        parse_str($parsed['query'] ?? '', $query);
+        $parsed  = parse_url($_SERVER['REQUEST_URI']);
+        $uri     = $parsed['path'] ?? 'no-path';
+        $method  = $_SERVER['REQUEST_METHOD'] ?? 'GET';
         $headers = self::getHeaders();
         $body    = self::getBody();
+        parse_str($parsed['query'] ?? '', $query);
 
-        return new Request($uri, $headers, $body, $query);
+        return new Request($uri, $method, $headers, $body, $query);
     }
 
     public static function createContext(Request $request): RequestContext
